@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Image Search</string>
+    <string name="error_title">Error</string>
+    <string name="error_positive_title">try again</string>
+    <string name="search_image">search image</string>
+    <string name="txt_search">Search</string>
+</resources>

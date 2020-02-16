@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.MainActivity">
+
+    <!--id is important when defining a fragment as it helps to preserve the state during config
+    changes-->
+    <fragment
+        android:id="@+id/main_fragment"
+        android:name="com.luckyom.imagesearch.ui.GalleryFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:tag="main_frag" />
+</FrameLayout>

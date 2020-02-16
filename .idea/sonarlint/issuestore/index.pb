@@ -1,0 +1,23 @@
+
+l
+<app/src/main/java/com/luckyom/imagesearch/ui/MainActivity.kt,5/4/546bd6328d8d05ce58d9f585ebaefc9fb945de1f
+w
+Gapp/src/main/java/com/luckyom/imagesearch/viewmodel/GalleryViewModel.kt,b/2/b26eb4618fecbea4410ff12e9ac8261f442ff2d5
+P
+ app/src/main/AndroidManifest.xml,8/c/8c55c3ccc257e5907959013f99656e4c8ec3903e
+r
+Bapp/src/main/java/com/luckyom/imagesearch/service/NetworkModule.kt,9/0/90f0f685f09793c9d11cbbaabd760c312f5002a3
+n
+>app/src/main/java/com/luckyom/imagesearch/service/FlickrApi.kt,5/b/5ba0eeb7c7c676845bf5c58e714baabbbbf37e23
+@
+app/build.gradle,f/4/f4a01d6a4fcb971362ec00a83903fd3902f52164
+q
+Aapp/src/main/java/com/luckyom/imagesearch/adapter/PhotoAdapter.kt,5/3/53624929e10c744b4f638b438ab2da8356f6a788
+i
+9app/src/main/java/com/luckyom/imagesearch/model/Images.kt,8/b/8b88f4d85e8bc15d109bcc3c0d62c4c22330c97d
+h
+8app/src/main/java/com/luckyom/imagesearch/model/Photo.kt,c/4/c4ba33e8d7d6063129f98ddcb8f5a6fd58229969
+o
+?app/src/main/java/com/luckyom/imagesearch/ui/GalleryFragment.kt,4/0/40be86d04cacf4742b84496e272842664fc8f7e9
+o
+?app/src/main/java/com/luckyom/imagesearch/ui/ImageViewholder.kt,4/3/43fe795fef6f2b903065101cac8d3564e397d5e6
