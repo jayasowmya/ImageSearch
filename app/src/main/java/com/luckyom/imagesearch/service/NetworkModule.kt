@@ -27,7 +27,7 @@ object NetworkModule {
         if (!::okHttpClient.isInitialized) {
             okHttpClient = OkHttpClient().newBuilder()
                 .addInterceptor(HttpLoggingInterceptor().apply {
-                    level = HttpLoggingInterceptor.Level.BODY
+                    level = HttpLoggingInterceptor.Level.BASIC
                 }).build()
         }
         return okHttpClient

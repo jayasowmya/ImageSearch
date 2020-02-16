@@ -1,6 +1,5 @@
 package com.luckyom.imagesearch.ui
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,29 +13,19 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.luckyom.imagesearch.R
 import com.luckyom.imagesearch.adapter.PhotoAdapter
 import com.luckyom.imagesearch.model.ImageInfo
-import com.luckyom.imagesearch.model.Photo
-import com.luckyom.imagesearch.service.FlickrApi
-import com.luckyom.imagesearch.service.NetworkModule
 import com.luckyom.imagesearch.viewmodel.GalleryViewModel
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.gallery_fragment.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
-
-const val BASE_URL = "https://api.flickr.com"
-const val API_KEY = "96358825614a5d3b1a1c3fd87fca2b47"
-
-const val METHOD = "flickr.photos.search"
-const val FORMAT = "json"
-const val CALLBACK_NUM = 1
 const val SPAN_COUNT = 3
 
 class GalleryFragment : Fragment() {
     private lateinit var photosAdapter: PhotoAdapter
 
     private lateinit var viewModel: GalleryViewModel
-    private var searchTerm: String? = null
+    private val disposable: CompositeDisposable = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,8 +40,12 @@ class GalleryFragment : Fragment() {
         et_search_term.addTextChangedListener(object : TextWatcher {
 
             override fun afterTextChanged(s: Editable) {
-                searchTerm = s.toString()
-                getPhotosFromApi()
+                disposable.add(viewModel.getPhotos(s.toString())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this@GalleryFragment::handleResult)
+                    { throwable -> showAlert(throwable) }
+                )
             }
 
             override fun beforeTextChanged(
@@ -75,50 +68,21 @@ class GalleryFragment : Fragment() {
         }
     }
 
-    private fun getPhotosFromApi() {
-        pg_bar.visibility = View.VISIBLE
-        val responseList =
-            searchTerm?.let {
-                NetworkModule.createService(FlickrApi::class.java, BASE_URL)
-                    .getPhotos(METHOD, API_KEY, it, FORMAT, CALLBACK_NUM)
-            }
-        responseList?.enqueue(object : Callback<ImageInfo> {
-            override fun onResponse(call: Call<ImageInfo>, response: Response<ImageInfo>) {
-                if (response.isSuccessful) {
-                    handleResult(response)
-                } else {
-                    showAlert(response.message())
-                }
-            }
-
-            override fun onFailure(call: Call<ImageInfo>, throwable: Throwable) {
-                throwable.message?.let { showAlert(it) }
-            }
-        })
-    }
-
-    private fun handleResult(response: Response<ImageInfo>) {
+    private fun handleResult(imageInfo: ImageInfo) {
         pg_bar.visibility = View.GONE
-        val photos = ArrayList<Photo>()
-        val photoList = response.body()?.photos?.photo
-        if (photoList != null) {
-            for (item in photoList) {
-                photos.add(item)
-            }
-            photosAdapter = PhotoAdapter(photos)
-            photosAdapter.apply {
-                setHasStableIds(true)
-            }
-            image_rcv.adapter = photosAdapter
-            viewModel.hideKeyboard(this.requireActivity())
+        viewModel.updateData(imageInfo)
+        photosAdapter = PhotoAdapter(viewModel.getPhotos())
+        photosAdapter.apply {
+            setHasStableIds(true)
         }
+        image_rcv.adapter = photosAdapter
     }
 
-    private fun showAlert(message: String) {
+    private fun showAlert(throwable: Throwable) {
         pg_bar.visibility = View.GONE
         val builder: AlertDialog.Builder = AlertDialog.Builder(this.requireContext())
         builder.setTitle(getString(R.string.error_title))
-            .setMessage(message)
+            .setMessage(throwable.message)
             .setPositiveButton(getString(R.string.error_positive_title)) { _, _ -> }
             .setIcon(android.R.drawable.ic_dialog_alert)
             .show()
